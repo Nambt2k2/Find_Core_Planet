@@ -1,28 +1,36 @@
 ﻿using UnityEngine;
 
-public sealed class MotionBullet : Bullet {
+public sealed class FollowBullet : Bullet {
     [SerializeField][RequireReference] Transform tf_start;
     [SerializeField][RequireReference] Transform tf_target;
     [SerializeField][RequireReference] Rigidbody2D rb;
+    bool isFire;
 
     void OnValidate() {
-        typePathBullet = E_TypePathBullet.Motion;
+        typePathBullet = E_TypePathBullet.Follow;
+    }
+
+    public override void Move() {
+        if (isFire) {
+            rb.MovePosition(ComputeInitialPos(transform.position, tf_target.position));
+        }
     }
 
     public override void FireBullet() {
         rb.velocity = Vector2.zero;
         gameObject.SetActive(true);
         transform.position = tf_start.position;
-        rb.velocity = ComputeInitialSpeed(tf_start.position, tf_target.position);
+        isFire = true;
+        rb.MovePosition(ComputeInitialPos(tf_start.position, tf_target.position));
     }
 
     /// <summary>
-    /// Hàm tính vận tốc ban đầu của chuyển động ném xiên
+    /// Hàm tính vị trí tiếp theo
     /// </summary>
     /// <param name="start"></param>
     /// <param name="target"></param>
     /// <returns></returns>
-    Vector2 ComputeInitialSpeed(Vector2 origin, Vector2 target) {
+    public Vector2 ComputeInitialPos(Vector2 origin, Vector2 target) {
         float gravity = Physics2D.gravity.magnitude; // Lấy độ lớn gia tốc trọng trường
         float distance = Mathf.Abs(target.x - origin.x); // Khoảng cách ngang
         float deltaY = target.y - origin.y; // Chênh lệch độ cao (âm nếu target thấp hơn)
@@ -50,5 +58,6 @@ public sealed class MotionBullet : Bullet {
 
     public override void HideBullet() {
         gameObject.SetActive(false);
+        isFire = false;
     }
 }
