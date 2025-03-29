@@ -18,7 +18,7 @@ public class NullReferenceWindow : EditorWindow {
     private GUIStyle labelStyle;
     private GUIStyle headerStyle;
 
-    [MenuItem("Window/Null Reference Checker _%#t")] // Shortcut: Ctrl + Shift + t
+    [MenuItem("_MyTool/Null Reference Checker _%#t")] // Shortcut: Ctrl + Shift + t
     public static void ShowWindow() {
         var window = GetWindow<NullReferenceWindow>("Null References");
         window.position = new Rect(100, 100, 400, 300);
